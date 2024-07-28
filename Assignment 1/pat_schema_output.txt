@@ -1,0 +1,561 @@
+SQL> -- Group id: G051
+SQL> -- Students name: Sia Yi Bin, Leong Xin Ru, Muhammad Mustafa Khan 
+SQL> DROP TABLE driver CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE driver_training_completion CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE feature CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE features_addition CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE language CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE location CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE noc CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE official CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE training_module CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE trip CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> DROP TABLE vehicle CASCADE CONSTRAINTS;
+
+TABLE dropped.
+
+SQL> -- predefined type, no DDL - MDSYS.SDO_GEOMETRY
+SQL> -- predefined type, no DDL - XMLTYPE
+SQL> CREATE TABLE driver (
+  2      driver_id             NUMBER(4) NOT NULL,
+  3      driver_given_name     VARCHAR2(50) NOT NULL,
+  4      driver_family_name    VARCHAR2(50) NOT NULL,
+  5      driver_license_number VARCHAR2(7) NOT NULL,
+  6      driver_date_of_birth  DATE NOT NULL,
+  7      driver_sec_cl_lvl     CHAR(1) NOT NULL,
+  8      driver_is_suspended   CHAR(1) NOT NULL,
+  9      vehicle_vin           VARCHAR2(17) NOT NULL
+  10  );
+
+TABLE created.
+
+SQL> ALTER TABLE driver
+  2      ADD CONSTRAINT chk_driver_sec_cl_lvl CHECK ( driver_sec_cl_lvl IN ( 'F', 'R' ) );
+
+TABLE altered.
+
+SQL> COMMENT ON COLUMN driver.driver_id IS
+  2      'driver_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_given_name IS
+  2      'driver_given_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_family_name IS
+  2      'driver_family_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_license_number IS
+  2      'driver_license_number';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_date_of_birth IS
+  2      'driver_date_of_birth';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_sec_cl_lvl IS
+  2      'driver_security_clearance_level,  F - Full,  R - Restricted';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.driver_is_suspended IS
+  2      'driver_is_suspended';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver.vehicle_vin IS
+  2      'vehicle_vin';
+Comment created.
+
+SQL> ALTER TABLE driver ADD CONSTRAINT driver_pk PRIMARY KEY ( driver_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE driver_training_completion (
+  2      driver_id           NUMBER(4) NOT NULL,
+  3      dtc_completion_date DATE NOT NULL,
+  4      tm_code             NUMBER(7) NOT NULL
+  5  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN driver_training_completion.driver_id IS
+  2      'driver_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver_training_completion.dtc_completion_date IS
+  2      'dtc_completion_date';
+Comment created.
+
+SQL> COMMENT ON COLUMN driver_training_completion.tm_code IS
+  2      'tm_code';
+Comment created.
+
+SQL> ALTER TABLE driver_training_completion ADD CONSTRAINT driver_training_completion_pk PRIMARY KEY ( driver_id,
+  2                                                                                                    tm_code );
+
+TABLE altered.
+
+SQL> CREATE TABLE feature (
+  2      feature_boot_space         VARCHAR2(50) NOT NULL,
+  3      feature_plating            VARCHAR2(50) NOT NULL,
+  4      feature_blackout           VARCHAR2(50) NOT NULL,
+  5      feature_mobile_wifi        CHAR(1) NOT NULL,
+  6      feature_electric_tail_lift CHAR(1) NOT NULL,
+  7      feature_carry              VARCHAR2(50) NOT NULL,
+  8      feature_gps                CHAR(1) NOT NULL,
+  9      vehicle_vin                VARCHAR2(17) NOT NULL,
+  10      features_id                NUMBER(8) NOT NULL
+  11  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN feature.feature_boot_space IS
+  2      'feature_boot_space';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_plating IS
+  2      'feature_plating';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_blackout IS
+  2      'feature_blackout';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_mobile_wifi IS
+  2      'feature_mobile_wifi';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_electric_tail_lift IS
+  2      'feature_electric_tail_lift';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_carry IS
+  2      'feature_carry';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.feature_gps IS
+  2      'feature_GPS';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.vehicle_vin IS
+  2      'vehicle_vin';
+Comment created.
+
+SQL> COMMENT ON COLUMN feature.features_id IS
+  2      'features_id';
+Comment created.
+
+SQL> ALTER TABLE feature ADD CONSTRAINT feature_pk PRIMARY KEY ( vehicle_vin );
+
+TABLE altered.
+
+SQL> CREATE TABLE features_addition (
+  2      features_id   NUMBER(8) NOT NULL,
+  3      features_name VARCHAR2(50) NOT NULL
+  4  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN features_addition.features_id IS
+  2      'features_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN features_addition.features_name IS
+  2      'features_name';
+Comment created.
+
+SQL> ALTER TABLE features_addition ADD CONSTRAINT features_addition_pk PRIMARY KEY ( features_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE language (
+  2      language_iso639_1code VARCHAR2(8) NOT NULL,
+  3      language_name         CHAR(2) NOT NULL,
+  4      driver_id             NUMBER(4) NOT NULL
+  5  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN language.language_iso639_1code IS
+  2      'language_iso639_1code';
+Comment created.
+
+SQL> COMMENT ON COLUMN language.language_name IS
+  2      'language_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN language.driver_id IS
+  2      'driver_id';
+Comment created.
+
+SQL> ALTER TABLE language ADD CONSTRAINT language_pk PRIMARY KEY ( language_iso639_1code,
+  2                                                                driver_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE location (
+  2      location_id      NUMBER(2) NOT NULL,
+  3      location_name    VARCHAR2(50) NOT NULL,
+  4      location_type    VARCHAR2(50) NOT NULL,
+  5      location_address VARCHAR2(50) NOT NULL,
+  6      trip_id          NUMBER(4) NOT NULL
+  7  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN location.location_id IS
+  2      'location id';
+Comment created.
+
+SQL> COMMENT ON COLUMN location.location_name IS
+  2      'location name';
+Comment created.
+
+SQL> COMMENT ON COLUMN location.location_type IS
+  2      'location type';
+Comment created.
+
+SQL> COMMENT ON COLUMN location.location_address IS
+  2      'location address';
+Comment created.
+
+SQL> COMMENT ON COLUMN location.trip_id IS
+  2      'trip_id';
+Comment created.
+
+SQL> ALTER TABLE location ADD CONSTRAINT location_pk PRIMARY KEY ( location_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE noc (
+  2      noc_ioc_code            VARCHAR2(50) NOT NULL,
+  3      noc_country_region_name VARCHAR2(50) NOT NULL,
+  4      noc_population          VARCHAR2(50) NOT NULL
+  5  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN noc.noc_ioc_code IS
+  2      'noc_ioc_code';
+Comment created.
+
+SQL> COMMENT ON COLUMN noc.noc_country_region_name IS
+  2      'noc_country_region_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN noc.noc_population IS
+  2      'noc_population';
+Comment created.
+
+SQL> ALTER TABLE noc ADD CONSTRAINT noc_pk PRIMARY KEY ( noc_ioc_code );
+
+TABLE altered.
+
+SQL> CREATE TABLE official (
+  2      official_olymic_id VARCHAR2(7) NOT NULL,
+  3      official_name      VARCHAR2(50) NOT NULL,
+  4      official_role      VARCHAR2(50) NOT NULL,
+  5      noc_ioc_code       VARCHAR2(50) NOT NULL
+  6  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN official.official_olymic_id IS
+  2      'official_olymic_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN official.official_name IS
+  2      'official_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN official.official_role IS
+  2      'official_role';
+Comment created.
+
+SQL> COMMENT ON COLUMN official.noc_ioc_code IS
+  2      'noc_ioc_code';
+Comment created.
+
+SQL> ALTER TABLE official ADD CONSTRAINT official_pk PRIMARY KEY ( official_olymic_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE training_module (
+  2      tm_code          NUMBER(7) NOT NULL,
+  3      tm_name          VARCHAR2(50) NOT NULL,
+  4      tm_description   VARCHAR2(50) NOT NULL,
+  5      tm_duration      NUMBER(2) NOT NULL,
+  6      tm_expiry_period DATE NOT NULL
+  7  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN training_module.tm_code IS
+  2      'tm_code';
+Comment created.
+
+SQL> COMMENT ON COLUMN training_module.tm_name IS
+  2      'tm_name';
+Comment created.
+
+SQL> COMMENT ON COLUMN training_module.tm_description IS
+  2      'tm_description';
+Comment created.
+
+SQL> COMMENT ON COLUMN training_module.tm_duration IS
+  2      'tm_duration';
+Comment created.
+
+SQL> COMMENT ON COLUMN training_module.tm_expiry_period IS
+  2      'tm_expiry_period ';
+Comment created.
+
+SQL> ALTER TABLE training_module ADD CONSTRAINT training_module_pk PRIMARY KEY ( tm_code );
+
+TABLE altered.
+
+SQL> CREATE TABLE trip (
+  2      vehicle_vin                    VARCHAR2(17) NOT NULL,
+  3      trip_number_of_passengers      NUMBER(2) NOT NULL,
+  4      trip_int_pick_up_date_time     DATE NOT NULL,
+  5      trip_int_drop_off_date_time    DATE NOT NULL,
+  6      trip_id                        NUMBER(4) NOT NULL,
+  7      trip_actual_pick_up_date_time  DATE NOT NULL,
+  8      trip_actual_drop_off_date_time DATE NOT NULL,
+  9      official_olymic_id             VARCHAR2(7) NOT NULL,
+  10      driver_id                      NUMBER(4) NOT NULL
+  11  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN trip.vehicle_vin IS
+  2      'vehicle_vin';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_number_of_passengers IS
+  2      'trip_number_of_passengers';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_int_pick_up_date_time IS
+  2      'trip_intended_pick_up_date_time';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_int_drop_off_date_time IS
+  2      'trip_intended_drop_off_date_time';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_id IS
+  2      'trip_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_actual_pick_up_date_time IS
+  2      'trip_actual_pick_up_date_time';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.trip_actual_drop_off_date_time IS
+  2      'trip_actual_drop_off_date_time';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.official_olymic_id IS
+  2      'official_olymic_id';
+Comment created.
+
+SQL> COMMENT ON COLUMN trip.driver_id IS
+  2      'driver_id';
+Comment created.
+
+SQL> ALTER TABLE trip ADD CONSTRAINT trip_pk PRIMARY KEY ( trip_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE trip
+  2      ADD CONSTRAINT trip_nk UNIQUE ( vehicle_vin,
+  3                                      official_olymic_id,
+  4                                      driver_id );
+
+TABLE altered.
+
+SQL> CREATE TABLE vehicle (
+  2      vehicle_vin              VARCHAR2(17) NOT NULL,
+  3      vehicle_registeration_no VARCHAR2(8) NOT NULL,
+  4      vehicle_make             VARCHAR2(50) NOT NULL,
+  5      vehicle_curr_odometer    NUMBER(6) NOT NULL,
+  6      vehicle_seats            NUMBER(2) NOT NULL,
+  7      vehicle_model            VARCHAR2(50) NOT NULL,
+  8      vehicle_year             DATE NOT NULL,
+  9      vehicle_features         VARCHAR2(50) NOT NULL
+  10  );
+
+TABLE created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_vin IS
+  2      'vehicle_vin';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_registeration_no IS
+  2      'vehicle_registeration_no';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_make IS
+  2      'vehicle_make';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_curr_odometer IS
+  2      'vehicle_curr_odometer';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_seats IS
+  2      'vehicle_seats';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_model IS
+  2      'vehicle_model';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_year IS
+  2      'vehicle_year';
+Comment created.
+
+SQL> COMMENT ON COLUMN vehicle.vehicle_features IS
+  2      'vehicle_features';
+Comment created.
+
+SQL> ALTER TABLE vehicle ADD CONSTRAINT vehicle_pk PRIMARY KEY ( vehicle_vin );
+
+TABLE altered.
+
+SQL> ALTER TABLE driver_training_completion
+  2      ADD CONSTRAINT driver_dtc FOREIGN KEY ( driver_id )
+  3          REFERENCES driver ( driver_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE language
+  2      ADD CONSTRAINT driver_language FOREIGN KEY ( driver_id )
+  3          REFERENCES driver ( driver_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE trip
+  2      ADD CONSTRAINT driver_trip FOREIGN KEY ( driver_id )
+  3          REFERENCES driver ( driver_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE feature
+  2      ADD CONSTRAINT features_addition FOREIGN KEY ( features_id )
+  3          REFERENCES features_addition ( features_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE official
+  2      ADD CONSTRAINT noc_official FOREIGN KEY ( noc_ioc_code )
+  3          REFERENCES noc ( noc_ioc_code );
+
+TABLE altered.
+
+SQL> ALTER TABLE trip
+  2      ADD CONSTRAINT official_trip FOREIGN KEY ( official_olymic_id )
+  3          REFERENCES official ( official_olymic_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE driver_training_completion
+  2      ADD CONSTRAINT tm_dtc FOREIGN KEY ( tm_code )
+  3          REFERENCES training_module ( tm_code );
+
+TABLE altered.
+
+SQL> ALTER TABLE location
+  2      ADD CONSTRAINT trip_location FOREIGN KEY ( trip_id )
+  3          REFERENCES trip ( trip_id );
+
+TABLE altered.
+
+SQL> ALTER TABLE feature
+  2      ADD CONSTRAINT vehicle_features FOREIGN KEY ( vehicle_vin )
+  3          REFERENCES vehicle ( vehicle_vin );
+
+TABLE altered.
+
+SQL> ALTER TABLE trip
+  2      ADD CONSTRAINT vehicle_trip FOREIGN KEY ( vehicle_vin )
+  3          REFERENCES vehicle ( vehicle_vin );
+
+TABLE altered.
+
+SQL> -- Oracle SQL Developer Data Modeler Summary Report: 
+SQL> -- 
+SQL> -- CREATE TABLE                            11
+SQL> -- CREATE INDEX                             0
+SQL> -- ALTER TABLE                             23
+SQL> -- CREATE VIEW                              0
+SQL> -- ALTER VIEW                               0
+SQL> -- CREATE PACKAGE                           0
+SQL> -- CREATE PACKAGE BODY                      0
+SQL> -- CREATE PROCEDURE                         0
+SQL> -- CREATE FUNCTION                          0
+SQL> -- CREATE TRIGGER                           0
+SQL> -- ALTER TRIGGER                            0
+SQL> -- CREATE COLLECTION TYPE                   0
+SQL> -- CREATE STRUCTURED TYPE                   0
+SQL> -- CREATE STRUCTURED TYPE BODY              0
+SQL> -- CREATE CLUSTER                           0
+SQL> -- CREATE CONTEXT                           0
+SQL> -- CREATE DATABASE                          0
+SQL> -- CREATE DIMENSION                         0
+SQL> -- CREATE DIRECTORY                         0
+SQL> -- CREATE DISK GROUP                        0
+SQL> -- CREATE ROLE                              0
+SQL> -- CREATE ROLLBACK SEGMENT                  0
+SQL> -- CREATE SEQUENCE                          0
+SQL> -- CREATE MATERIALIZED VIEW                 0
+SQL> -- CREATE MATERIALIZED VIEW LOG             0
+SQL> -- CREATE SYNONYM                           0
+SQL> -- CREATE TABLESPACE                        0
+SQL> -- CREATE USER                              0
+SQL> -- 
+SQL> -- DROP TABLESPACE                          0
+SQL> -- DROP DATABASE                            0
+SQL> -- 
+SQL> -- REDACTION POLICY                         0
+SQL> -- TSDP POLICY                              0
+SQL> -- 
+SQL> -- ORDS DROP SCHEMA                         0
+SQL> -- ORDS ENABLE SCHEMA                       0
+SQL> -- ORDS ENABLE OBJECT                       0
+SQL> -- 
+SQL> -- ERRORS                                   0
+SQL> -- WARNINGS                                 0
+SQL> SPOOL off
+
